@@ -1,6 +1,5 @@
 package nhauqq.qolfeatures.mixin;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.data.tag.Tag;
 import net.minecraft.core.entity.player.EntityPlayer;
@@ -20,15 +19,14 @@ public abstract class ItemToolPickaxeOverride extends ItemTool {
 	}
 
 	public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int blockX, int blockY, int blockZ, Side side, double xPlaced, double yPlaced){
-		Minecraft mc = Minecraft.getMinecraft(Minecraft.class);
 		int torchIndex = InventoryHelper.findStackIndex(entityplayer.inventory.mainInventory, new ItemStack(Block.torchCoal));
 		if (torchIndex != -1){
 			ItemStack stack = entityplayer.inventory.mainInventory[torchIndex];
-			boolean success = mc.playerController.activateBlockOrUseItem(entityplayer, world, stack, blockX, blockY, blockZ, side, xPlaced, yPlaced);
-			if (stack.stackSize < 1){
+			boolean flag = stack.getItem().onItemUse(stack, entityplayer, world, blockX, blockY, blockZ, side, xPlaced, yPlaced);
+			if (stack.stackSize <= 0){
 				entityplayer.inventory.mainInventory[torchIndex] = null;
 			}
-			return success;
+			return flag;
 		}
 		return false;
 	}
