@@ -23,7 +23,12 @@ public abstract class ItemToolPickaxeOverride extends ItemTool {
 		Minecraft mc = Minecraft.getMinecraft(Minecraft.class);
 		int torchIndex = InventoryHelper.findStackIndex(entityplayer.inventory.mainInventory, new ItemStack(Block.torchCoal));
 		if (torchIndex != -1){
-			return mc.playerController.activateBlockOrUseItem(entityplayer, world, entityplayer.inventory.mainInventory[torchIndex], blockX, blockY, blockZ, side, xPlaced, yPlaced);
+			ItemStack stack = entityplayer.inventory.mainInventory[torchIndex];
+			boolean success = mc.playerController.activateBlockOrUseItem(entityplayer, world, stack, blockX, blockY, blockZ, side, xPlaced, yPlaced);
+			if (stack.stackSize < 1){
+				entityplayer.inventory.mainInventory[torchIndex] = null;
+			}
+			return success;
 		}
 		return false;
 	}
